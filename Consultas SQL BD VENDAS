@@ -1,0 +1,42 @@
+-- 1 – Crie uma consulta que mostre um ranking das categorias mais vendidas por faturamento.
+-- Ex: Laticínios | 10000
+
+
+-- CATEGORIA ---> CATEGORIES 
+-- VENDAS ---> ORDER DETAILS
+
+SELECT CT.CategoryName AS CATEGORIAS, SUM(OD.Quantity) AS VENDAS 
+FROM Categories CT
+INNER JOIN Products P ON P.CategoryID = CT.CategoryID
+INNER JOIN [Order Details] OD ON OD.ProductID = P.ProductID
+GROUP BY CT.CategoryName
+ORDER BY VENDAS DESC
+
+-- Crie uma consulta que mostre os 3 produtos mais vendidos em toda a história da empresa em nível de quantidade.
+-- Ex: Pizza 4 queijos | 30000
+
+-- PRODUTOS ---> PRODUCTS
+-- VENDAS ---> ORDER DETAILS
+
+SELECT TOP 3 P.ProductName AS PRODUTO, SUM(OD.Quantity) AS VENDAS
+FROM Products P
+INNER JOIN [Order Details] OD ON  OD.ProductID = P.ProductID
+GROUP BY P.ProductName
+ORDER BY VENDAS DESC
+
+-- Crie uma consulta que mostre para quais países os produtos descontinuados já foram vendidos. Trazer o nome do produto, 
+-- a quantidade vendida, o nome do país e a data da venda
+
+-- PRODUTOS DESCONTINUADOS ---> PRODUCTS
+-- VENDAS ---> ORDER DETAILS
+-- PAÍS ---> ORDERS
+-- DATA ---> 
+
+SELECT P.Discontinued AS DESCONTINUADOS, P.ProductName AS PRODUTOS,
+	   OD.Quantity AS VENDAS, O.ShipCountry AS PAIS, O.OrderDate
+FROM Products P
+INNER JOIN [Order Details] OD ON OD.ProductID = P.ProductID
+INNER JOIN Orders O ON O.OrderID = OD.OrderID
+WHERE 
+	P.Discontinued = 1
+
